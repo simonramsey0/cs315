@@ -1,1 +1,1 @@
-# cs315
+# CS-315 - Algorithms and Analysis
