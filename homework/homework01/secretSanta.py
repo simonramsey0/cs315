@@ -2,13 +2,47 @@
 # CS315 - Algorithms and Analysis
 # Homework 1 - Secret Santa, Multiplication without operator, Multiplication Recursively
 
-# Prompted ChatGPT to asssist with the initial understanding of the problem and what the correct path was.
-# I specify "no code in this thread" and "only discuss at a high level, don't describe full implementation"
-# GPT directed me towards using a graph-based approach to model the problem, I did some research and landed on this solution.
+from itertools import permutations
+import json
+import os
 
-# Resources used:
-# https://www.geeksforgeeks.org/dsa/ford-fulkerson-algorithm-for-maximum-flow-problem/
-# https://www.geeksforgeeks.org/dsa/maximum-bipartite-matching/
+def secret_santa(participants: list, invalid_combinations: set[tuple]) -> list:
+  all_permutations = permutations(participants)
 
-def secret_santa(participants: list, invalid_combinations: list[tuple]) -> None:
-  pass
+  acceptable_combinations = []
+
+  for p in all_permutations:
+    valid = True
+    zipped_list = list(zip(participants, p)) # combine each permutation with the original list of participants to ensure every possible group of pairings is considered
+
+    # check every pairing in the zipped list for validity
+    for i, j in zipped_list:
+      if (i, j) in invalid_combinations or i == j:
+        valid = False
+        break
+    
+    if valid:
+      acceptable_combinations.append(list(zipped_list))
+
+  return acceptable_combinations
+
+# if the output file already exists then delete it
+if os.path.exists("output.txt"):
+    os.remove("output.txt")
+
+# load input data from json file
+file = open("input.json", "r")
+data = json.load(file)
+file.close()
+
+participants = data["participants"]
+invalid_combinations = set(tuple(pair) for pair in data["invalid_combinations"]) # convert list of lists to set of tuples for easier comparison
+combinations = secret_santa(participants, invalid_combinations)
+
+# write all permissable combinations to the output text file
+file = open("output.txt", "w")
+for c in combinations:
+  for pair in c:
+    file.write(f"({pair[0]} gives to {pair[1]}), ")
+  file.write("\n")
+file.close()

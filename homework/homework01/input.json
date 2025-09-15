@@ -1,0 +1,4 @@
+{
+  "participants": ["Sam", "Alex", "Jordan", "Peter", "Emily", "Chris", "Taylor", "Morgan"],
+  "invalid_combinations": [["Sam", "Emily"], ["Alex", "Jordan"], ["Peter", "Chris"], ["Taylor", "Morgan"], ["Jordan", "Sam"]]
+}
